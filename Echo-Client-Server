@@ -1,0 +1,88 @@
+import java.net.*;
+import java.io.*;
+
+public class EchoServer {
+    public static void main(String[] args) throws IOException {
+	ServerSocket serverSock = null;
+	try {
+	serverSock = new ServerSocket(10007);
+	}
+	catch (IOException ie) {
+	   System.out.println("cant listen on port 10007");
+	   System.exit(1);
+	}
+	Socket clientSock = null;
+	System.out.println("Listening for connection....");
+	try {
+	   clientSock = serverSock.accept();
+	}
+	catch (IOException ie) {
+	   System.out.println("Acceept failed.");
+	   System.exit(1);
+	}
+	System.out.println("Connection successful!");
+	System.out.println("Listening for input...");
+	
+	PrintWriter output = new PrintWriter(clientSock.getOutputStream(),true);
+	BufferedReader input = new BufferedReader(new InputStreamReader(clientSock.getInputStream()));
+
+	String inputLine;
+	while ((inputLine = input.readLine()) != null) {
+	   System.out.println("Server: " + inputLine);
+	   output.println(inputLine);
+	   if (inputLine.equals("Bye")) {
+		break;
+	   }
+	}
+	   output.close();
+	   input.close();
+	   clientSock.close();
+	   serverSock.close();
+     }
+
+}
+
+
+
+
+------------------------------------------------------------------------------------------
+
+
+
+import java.net.*;
+import java.io.*;
+
+public class EchoClient {
+   public static void main(String[] args)throws IOException {
+	Socket sock = null;
+	PrintWriter output = null;
+	BufferedReader input = null;
+
+	try {
+	   sock = new Socket("127.0.0.1", 10007);
+	   output = new PrintWriter(sock.getOutputStream(), true);
+	   input = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+	   
+	}
+	catch (UnknownHostException e) {
+	   System.out.println("Unknown host");
+	   System.exit(1);
+	}
+	catch (IOException ie) {
+	   System.out.println("Csnnot connect to host");
+	   System.exit(1);
+	}
+	
+	BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+	
+	String userInput;
+	while ((userInput = stdIn.readLine()) != null) {
+	   output.println(userInput);
+	   System.out.println("echo: " + input.readLine());
+	}
+	output.close();
+	input.close();
+	stdIn.close();
+	sock.close();
+	}
+    }
