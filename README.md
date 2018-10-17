@@ -1,2 +1,2 @@
 # Java-Programs
-a bunch of little java programs
+a bunch of java programs
